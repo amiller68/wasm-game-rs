@@ -1,0 +1,35 @@
+[package]
+name = "wasm-game-rs"
+version = "0.0.0"
+authors = ["amiller68 <alexanderscottmiller@gmail.com>"]
+edition = "2021"
+
+[features]
+default = ["console_error_panic_hook"]
+
+[dependencies]
+console_error_panic_hook = { version = "^0.1", optional = true }
+wasm-bindgen = "^0.2"
+leptos = { version = "^0.5", features = ["csr", "nightly"] }
+wee_alloc = { version = "^0.4", optional = true }
+js-sys = "^0.3"
+fixedbitset = "^0.4"
+anyhow = "1.0.75"
+gloo = "0.10.0"
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+  "console",
+  "CanvasRenderingContext2d",
+  "Window",
+  "DomRect", 
+  "Element"
+]
+
+
+[dev-dependencies]
+wasm-bindgen-test = "^0.3"
+
+[profile.release]
+pt-level = "s"

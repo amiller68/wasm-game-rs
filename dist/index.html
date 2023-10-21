@@ -18,7 +18,9 @@
     </style>
     <!-- What do you call this? -->
     <title>Wasm Game Rs</title>
-  </head>
+  
+<link rel="preload" href="/wasm-game-rs-9a0c39fa03c8c4bd_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/wasm-game-rs-9a0c39fa03c8c4bd.js"></head>
   <!-- Basic games have: -->
   <body>
     <h1>Wasm Game Rs</h1>
@@ -29,7 +31,7 @@
     <!-- Canvas -->
     <canvas id="game-canvas"></canvas>
   
-<script>(function () {
+<script type="module">import init from '/wasm-game-rs-9a0c39fa03c8c4bd.js';init('/wasm-game-rs-9a0c39fa03c8c4bd_bg.wasm');</script><script>(function () {
     var protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     var url = protocol + '//' + window.location.host + '/_trunk/ws';
     var poll_interval = 5000;

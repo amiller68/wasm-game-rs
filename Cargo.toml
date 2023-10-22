@@ -16,6 +16,8 @@ js-sys = "^0.3"
 fixedbitset = "^0.4"
 anyhow = "1.0.75"
 gloo = "0.10.0"
+arc = "0.0.1"
+leptos-use = { version = "^0.7", features = ["docs", "math"] }
 
 [dependencies.web-sys]
 version = "0.3"

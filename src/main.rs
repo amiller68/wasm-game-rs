@@ -1,43 +1,45 @@
-#[allow(dead_code)]
-
-mod error;
 mod universe;
 mod utils;
 
-// use error::{Error, Result};
 use universe::Universe;
 use utils::set_panic_hook;
 
-use leptos::*;
-extern crate wasm_bindgen;
-
-extern crate js_sys;
-use std::f64;
+use leptos_use::use_interval_fn;
+use std::cell::RefCell;
+use std::{f64, rc::Rc};
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
+use wasm_bindgen::JsCast;
 
 const CELL_SIZE: f64 = 5.0;
 const GRID_COLOR: &str = "#CCCCCC";
 const DEAD_COLOR: &str = "#FFFFFF";
 const ALIVE_COLOR: &str = "#000000";
 
-// extern crate web_sys;
-// use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, console};
-
-fn main() {
-    set_panic_hook();
-    leptos::mount_to_body(Game)
-}
+use leptos::*;
 
 #[component]
-fn Game() -> impl IntoView {
-    init();
+fn Demo() -> impl IntoView {
+    let (ctx, universe) = init();
+    let universe_ref = Rc::new(RefCell::new(universe));
+
+   use_interval_fn(
+        move || {
+            let mut universe = universe_ref.as_ref().borrow_mut();
+            universe.tick();
+            draw_cells(&ctx, &universe);
+        },
+        100_u64,
+    );
+
     view! {}
 }
 
-use wasm_bindgen::JsCast;
+fn main() {
+    set_panic_hook();
+    mount_to_body(Demo);
+}
 
-
-pub fn init() {
+pub fn init() -> (CanvasRenderingContext2d, Universe) {
     // Get the document and create a canvas element
     let document = web_sys::window().unwrap().document().unwrap();
     let canvas = document
@@ -54,17 +56,21 @@ pub fn init() {
         .dyn_into::<CanvasRenderingContext2d>()
         .unwrap();
 
+
     // Create the Universe and get its width and height
     let universe =  Universe::new(None);
     let width = universe.width();
     let height = universe.height();
 
     // Set the canvas size based on the Universe size
-    canvas.set_height(((CELL_SIZE + 1.0) * height as f64 + 1.0) as u32);
-    canvas.set_width(((CELL_SIZE + 1.0) * width as f64 + 1.0) as u32);
+    let canvas_height = ((CELL_SIZE + 1.0) * height as f64 + 1.0) as u32;
+    let canvas_width = ((CELL_SIZE + 1.0) * width as f64 + 1.0) as u32;
+    canvas.set_height(canvas_height);
+    canvas.set_width(canvas_width);
 
     draw_grid(&context, &universe);
-    draw_cells(&context, &universe);
+
+    (context, universe)
 }
 
 fn draw_grid(context: &CanvasRenderingContext2d, universe: &Universe) {
@@ -89,7 +95,7 @@ fn draw_grid(context: &CanvasRenderingContext2d, universe: &Universe) {
     context.stroke();
 }
 
-fn draw_cells(context: &CanvasRenderingContext2d, universe: &Universe) {
+fn draw_cells(context: &CanvasRenderingContext2d, universe: &Universe) { 
     // Draw the cells
     let width = universe.width();
     let height = universe.height();

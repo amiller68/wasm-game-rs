@@ -144,7 +144,7 @@ impl Universe {
         }
     }
 
-    pub fn tick(&mut self) {
+    pub fn tick(&mut self) -> &Self {
         let mut next = { self.cells.clone() };
 
         {
@@ -168,5 +168,6 @@ impl Universe {
             }
         }
         self.cells = next;
+        self
     }
 }

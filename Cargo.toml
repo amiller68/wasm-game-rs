@@ -1,5 +1,5 @@
 [package]
-name = "wasm-game-rs"
+name = "wasm-life-rs"
 version = "0.0.0"
 authors = ["amiller68 <alexanderscottmiller@gmail.com>"]
 edition = "2021"

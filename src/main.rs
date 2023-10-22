@@ -7,8 +7,8 @@ use utils::set_panic_hook;
 use leptos_use::use_interval_fn;
 use std::cell::RefCell;
 use std::{f64, rc::Rc};
-use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 use wasm_bindgen::JsCast;
+use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 
 const CELL_SIZE: f64 = 5.0;
 const GRID_COLOR: &str = "#CCCCCC";
@@ -22,7 +22,7 @@ fn Demo() -> impl IntoView {
     let (ctx, universe) = init();
     let universe_ref = Rc::new(RefCell::new(universe));
 
-   use_interval_fn(
+    use_interval_fn(
         move || {
             let mut universe = universe_ref.as_ref().borrow_mut();
             universe.tick();
@@ -31,10 +31,7 @@ fn Demo() -> impl IntoView {
         100_u64,
     );
 
-    view! {
-        <h1>Wasm Game Of Life</h1>
-        <canvas id="game-canvas"></canvas>
-    }
+    view! {}
 }
 
 fn main() {
@@ -59,9 +56,8 @@ pub fn init() -> (CanvasRenderingContext2d, Universe) {
         .dyn_into::<CanvasRenderingContext2d>()
         .unwrap();
 
-
     // Create the Universe and get its width and height
-    let universe =  Universe::new(None);
+    let universe = Universe::new(None);
     let width = universe.width();
     let height = universe.height();
 
@@ -98,7 +94,7 @@ fn draw_grid(context: &CanvasRenderingContext2d, universe: &Universe) {
     context.stroke();
 }
 
-fn draw_cells(context: &CanvasRenderingContext2d, universe: &Universe) { 
+fn draw_cells(context: &CanvasRenderingContext2d, universe: &Universe) {
     // Draw the cells
     let width = universe.width();
     let height = universe.height();

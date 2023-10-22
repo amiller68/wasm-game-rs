@@ -31,7 +31,10 @@ fn Demo() -> impl IntoView {
         100_u64,
     );
 
-    view! {}
+    view! {
+        <h1>Wasm Game Of Life</h1>
+        <canvas id="game-canvas"></canvas>
+    }
 }
 
 fn main() {

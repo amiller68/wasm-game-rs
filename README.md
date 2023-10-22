@@ -14,3 +14,9 @@ General
     translated to work with leptos and trunk
   </p>
 </div>
+
+## 🚴 Usage
+`trunk serve`
+
+## 🚴‍♀️ Build
+`trunk build --release`

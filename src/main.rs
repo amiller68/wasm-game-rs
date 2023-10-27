@@ -5,16 +5,15 @@ use universe::Universe;
 use utils::set_panic_hook;
 
 use leptos::*;
-use leptos_use::{use_interval_fn, use_event_listener, utils::Pausable};
+use leptos_use::{use_event_listener, use_interval_fn, utils::Pausable};
 use std::cell::RefCell;
 use std::{f64, rc::Rc};
 use wasm_bindgen::prelude::*;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 
-const CELL_SIZE: f64 = 5.0;
+const CELL_SIZE: f64 = 10.0;
 const GRID_COLOR: &str = "#CCCCCC";
 const DEAD_COLOR: &str = "#FFFFFF";
-const ALIVE_COLOR: &str = "#000000";
 
 #[component]
 fn App() -> impl IntoView {
@@ -22,6 +21,7 @@ fn App() -> impl IntoView {
     let canvas_ref: NodeRef<html::Canvas> = create_node_ref::<leptos::html::Canvas>();
     let pause_button_ref: NodeRef<html::Button> = create_node_ref::<leptos::html::Button>();
     let clear_button_ref: NodeRef<html::Button> = create_node_ref::<leptos::html::Button>();
+    let reset_button_ref: NodeRef<html::Button> = create_node_ref::<leptos::html::Button>();
     let spaceship_button_ref: NodeRef<html::Button> = create_node_ref::<leptos::html::Button>();
 
     // Create a callback to initialize our canvas
@@ -42,11 +42,11 @@ fn App() -> impl IntoView {
         let canvas_height = ((CELL_SIZE + 1.0) * height as f64 + 1.0) as u32;
         let canvas_width = ((CELL_SIZE + 1.0) * width as f64 + 1.0) as u32;
         canvas.set_height(canvas_height);
-        canvas.set_width(canvas_width);        
+        canvas.set_width(canvas_width);
         draw_grid(&ctx, &universe);
         let universe = Rc::new(RefCell::new(universe));
         let ctx = Rc::new(ctx);
-        
+
         // Mount event listeners on top level element
         let universe_clone = Rc::clone(&universe);
         let _ = use_event_listener(
@@ -67,8 +67,8 @@ fn App() -> impl IntoView {
             let Pausable {
                 pause,
                 resume,
-                is_active
-            }  = use_interval_fn(
+                is_active,
+            } = use_interval_fn(
                 move || {
                     let ctx = ctx_clone.as_ref();
                     let mut universe = universe_clone.as_ref().borrow_mut();
@@ -80,52 +80,52 @@ fn App() -> impl IntoView {
             let pause_button = pause_button_ref.get().unwrap();
             pause_button.set_inner_text("Pause");
             let pause_button_clone = pause_button_ref.clone();
-            let _ = use_event_listener(
-                pause_button_ref,
-                leptos::ev::click,
-                move |_| {
-                    let pause_button = pause_button_clone.get().unwrap();
-                    if is_active() {
-                        pause();
-                        pause_button.set_inner_text("Resume");
-                    } else {
-                        resume();
-                        pause_button.set_inner_text("Pause");
-                    }
-                },
-            );
+            let _ = use_event_listener(pause_button_ref, leptos::ev::click, move |_| {
+                let pause_button = pause_button_clone.get().unwrap();
+                if is_active() {
+                    pause();
+                    pause_button.set_inner_text("Resume");
+                } else {
+                    resume();
+                    pause_button.set_inner_text("Pause");
+                }
+            });
         });
 
         // Clear the simulation
         let universe_clone = Rc::clone(&universe);
         let ctx_clone = Rc::clone(&ctx);
         clear_button_ref.on_load(move |_| {
-            let _ = use_event_listener(
-                clear_button_ref,
-                leptos::ev::click,
-                move |_| {
-                    let ctx = ctx_clone.as_ref();
-                    let mut universe = universe_clone.as_ref().borrow_mut();
-                    universe.cells.clear();
-                    draw_cells(&ctx, &mut universe);
-                },
-            );
+            let _ = use_event_listener(clear_button_ref, leptos::ev::click, move |_| {
+                let ctx = ctx_clone.as_ref();
+                let mut universe = universe_clone.as_ref().borrow_mut();
+                universe.cells.clear();
+                draw_cells(&ctx, &mut universe);
+            });
+        });
+
+        // Reset the simulation
+        let universe_clone = Rc::clone(&universe);
+        let ctx_clone = Rc::clone(&ctx);
+        reset_button_ref.on_load(move |_| {
+            let _ = use_event_listener(reset_button_ref, leptos::ev::click, move |_| {
+                let ctx = ctx_clone.as_ref();
+                let mut universe = universe_clone.as_ref().borrow_mut();
+                universe.reset();
+                draw_cells(&ctx, &mut universe);
+            });
         });
 
         // Draw a spaceship in the upper left corner
         let universe_clone = Rc::clone(&universe);
         let ctx_clone = Rc::clone(&ctx);
         spaceship_button_ref.on_load(move |_| {
-            let _ = use_event_listener(
-                spaceship_button_ref,
-                leptos::ev::click,
-                move |_| {
-                    let ctx = ctx_clone.as_ref();
-                    let mut universe = universe_clone.as_ref().borrow_mut();
-                    universe.set_cells(&[(1,2), (2,3), (3,1), (3,2), (3,3)]);
-                    draw_cells(&ctx, &mut universe);
-                },
-            );
+            let _ = use_event_listener(spaceship_button_ref, leptos::ev::click, move |_| {
+                let ctx = ctx_clone.as_ref();
+                let mut universe = universe_clone.as_ref().borrow_mut();
+                universe.set_cells(&[(1, 2), (2, 3), (3, 1), (3, 2), (3, 3)]);
+                draw_cells(&ctx, &mut universe);
+            });
         });
     });
 
@@ -134,18 +134,23 @@ fn App() -> impl IntoView {
         <div>
             <h1>Wasm Game Of Life</h1>
             // We pass our node refs to the elements we want to mount event listeners on
+            <div>
+                <button
+                    node_ref=pause_button_ref
+                ></button>
+                <button
+                    node_ref=clear_button_ref
+                >Clear</button>
+                <button
+                    node_ref=reset_button_ref
+                >Reset</button>
+                <button
+                    node_ref=spaceship_button_ref
+                >Spaceship</button>
+            </div>
             <canvas
                 node_ref=canvas_ref
             ></canvas>
-            <button
-                node_ref=pause_button_ref
-            ></button>
-            <button
-                node_ref=clear_button_ref
-            >Clear</button>
-            <button
-                node_ref=spaceship_button_ref
-            >Spaceship</button>
         </div>
     }
 }
@@ -219,10 +224,11 @@ fn draw_cells(context: &CanvasRenderingContext2d, universe: &Universe) {
         for col in 0..width {
             let idx = universe.get_index(row, col);
 
+            let random_color = random_color::RandomColor::new().to_hex();
             let fill_style = if !universe.cells[idx] {
                 DEAD_COLOR
             } else {
-                ALIVE_COLOR
+                random_color.as_str()
             };
 
             context.set_fill_style(&fill_style.into());

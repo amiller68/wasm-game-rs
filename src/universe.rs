@@ -16,8 +16,8 @@ pub struct Universe {
 impl Universe {
     pub fn new(init: Option<&[(u32, u32)]>) -> Universe {
         utils::set_panic_hook();
-        let width = 128;
-        let height = 128;
+        let width = 64;
+        let height = 64;
 
         let size = (width * height) as usize;
         let mut cells = FixedBitSet::with_capacity(size);
@@ -52,6 +52,13 @@ impl Universe {
 
     pub fn height(&self) -> u32 {
         self.height
+    }
+
+    pub fn reset(&mut self) {
+        self.cells = FixedBitSet::with_capacity((self.width * self.height) as usize);
+        for i in 0..self.width() * self.height() {
+            self.cells.set(i as usize, random() < 0.5);
+        }
     }
 
     /// Set the width of the universe.

@@ -12,6 +12,7 @@ pub struct Universe {
     pub cells: FixedBitSet,
 }
 
+#[allow(dead_code)]
 impl Universe {
     pub fn new(init: Option<&[(u32, u32)]>) -> Universe {
         utils::set_panic_hook();

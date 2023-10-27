@@ -26,7 +26,9 @@ features = [
   "CanvasRenderingContext2d",
   "Window",
   "DomRect", 
-  "Element"
+  "Element",
+  "HtmlCanvasElement",
+  "HtmlButtonElement"
 ]
 
 

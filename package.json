@@ -1,0 +1,12 @@
+{
+  "name": "wasm-life-rs",
+  "version": "0.0.0",
+  "description": "Simple Conway's Game of Life implementation in Rust, compiled to WebAssembly",
+  "scripts": {
+    "prepare": "rustup override set nightly && rustup target add wasm32-unknown-unknown && cargo install trunk --locked",
+    "dev": "trunk serve",
+    "build": "trunk build --release"
+  },
+  "author": "Alex Miller",
+  "license": "MIT"
+}

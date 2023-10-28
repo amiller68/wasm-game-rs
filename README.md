@@ -1,22 +1,24 @@
 # wasm-game-rs
-General 
 
-## Notes
-* trunk
-* wasm-bindgen
-* wasm-pack
+Example of a Rust/WASM game using trunk and leptos.
 
-<div align="center">
-  <h1><code>Wasm Game of Life</code></h1>
-  <h2> My attempt at making my way through the WASM tutorial: https://rustwasm.github.io/docs/book/game-of-life/introduction.html </h2>
-  <strong>
-  <p>
-    translated to work with leptos and trunk
-  </p>
-</div>
 
-## 🚴 Usage
-`trunk serve`
+Implements a simple Conway's Game of Life simulation.
 
-## 🚴‍♀️ Build
-`trunk build --release`
+Feel free to use as a template for interactive Rust/WASM projects.
+
+!["demo"](./github/docs/demo.png)
+
+## Requirements
+* yarn 
+
+## Usage
+
+```bash
+# Install trunk
+yarn prepare
+# Dev server
+yarn dev
+# Build
+yarn build
+```

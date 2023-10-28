@@ -11,14 +11,13 @@ default = ["console_error_panic_hook"]
 console_error_panic_hook = { version = "^0.1", optional = true }
 wasm-bindgen = "^0.2"
 leptos = { version = "^0.5", features = ["csr", "nightly"] }
-wee_alloc = { version = "^0.4", optional = true }
 js-sys = "^0.3"
 fixedbitset = "^0.4"
-anyhow = "1.0.75"
-gloo = "0.10.0"
-arc = "0.0.1"
 leptos-use = { version = "^0.7", features = ["docs", "math"] }
 random_color = { version = "^0.6", features = ["wasm-bindgen"] }
+styled = "0.1.41"
+stylist = "0.13.0"
+stylers = "0.3.2"
 
 [dependencies.web-sys]
 version = "0.3"

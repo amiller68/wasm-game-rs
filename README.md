@@ -1,4 +1,4 @@
-# wasm-game-rs
+# wasm-life-rs
 
 Example of a Rust/WASM game using trunk and leptos.
 

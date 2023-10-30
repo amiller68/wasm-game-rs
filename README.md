@@ -10,7 +10,9 @@ Feel free to use as a template for interactive Rust/WASM projects.
 !["demo"](./.github/docs/demo.png)
 
 ## Requirements
-* yarn 
+* yarn
+* rustup
+* cargo
 
 ## Usage
 
